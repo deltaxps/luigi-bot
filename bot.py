@@ -11,8 +11,6 @@ bot = commands.Bot(
     case_insensitive=True,
 )
 
-p = random.randint(1, 100)
-
 with open(f"{os.path.realpath(os.path.dirname(__file__))}/backend/config.json") as file:
     config = json.load(file)
 
@@ -21,22 +19,24 @@ with open(f"{os.path.realpath(os.path.dirname(__file__))}/backend/config.json") 
 async def on_ready():
     os.system("cls" if os.name == "nt" else "clear")
     print("logged in")
-
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(type=discord.ActivityType.watching, name="super mario"))
 
 @bot.event
 async def on_message(msg):
     if msg.author.bot:
         return
+    
+    p = random.randint(1, 100)
 
     if "luigi" in msg.content.lower().replace(" ", ""):
         if p <= 1:  # ryan requested this response
-            await msg.reply("go fuck yourself")
+            await msg.reply("go fuck yourself", mention_author=False)
             return
 
         if p <= 1:
             path = str(pathlib.Path(__file__).parent.absolute()) + "/data/secrets"
             img = os.path.join(path, "help.jpg")
-            await msg.reply(file=discord.File(img))
+            await msg.reply(file=discord.File(img), mention_author=False)
             return
 
         replies = []
@@ -46,7 +46,7 @@ async def on_message(msg):
                 replies.append(line)
 
         reply = replies[random.randrange(0, len(replies))]
-        await msg.reply(reply)
+        await msg.reply(reply, mention_author=False)
 
 
 bot.run(config["token"])
